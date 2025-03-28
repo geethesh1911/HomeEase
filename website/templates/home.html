@@ -1,0 +1,37 @@
+{% extends "base.html"%}
+
+{%block body%}
+<div class="container d-flex vh-100 w-100 p-3 mx-auto justify-content-center align-items-center flex-column">
+    <main>
+        <h1 class="text-primary text-center">Welcome to HomeEase</h1>
+        <p class="lead text-center">Your trusted partner for home cleaning, maintenance, and more!</p>
+    </main>
+    <section id="services" class="py-5">
+        <div class="container" style="padding-top: 40px;">
+            <h2 class="text-center mb-3">Our Services</h2>
+            <div class="row">
+                <div class="col-md-4 text-center mb-3">
+                    <div class="card shadow-sm p-4">
+                        <h4>Cleaning Services</h4>
+                        <p>From deep cleaning to routine maintenance, we make sure your space is spotless.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="card shadow-sm p-4">
+                        <h4>Electrical Services</h4>
+                        <p>Our skilled electricians handle installations, repairs, and maintenance.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="card shadow-sm p-4">
+                        <h4>Plumbing Services</h4>
+                        <p>Need help with leaks or clogs? Our expert plumbers are here to assist.</p>
+                    </div>
+                </div>
+            </div>
+            <h4 class="text-center text-secondary">And more...</h4>
+        </div>
+    </section>
+</div>
+
+{%endblock%}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container mt-5">
+    <h2>Customer Service Requests Summary</h2>
+    <img src="{{url_for('auth.customer_service_requests_graph')}}" alt="Customer Service Requests Graph" class="img-fluid">
+</div>
+
+{%endblock%}

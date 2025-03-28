@@ -1,0 +1,66 @@
+{%extends 'base.html'%}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container mt-5">
+    <h2>Services available</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Service</th>
+                <th>Contact</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in service_requests %}
+            <tr>
+                <td>{{request.id}}</td>
+                <td>{{request.customer.name}}</td>
+                <td>{{request.service.name}}</td>
+                <td>{{request.customer.phone_number}}</td>
+                <td>{{request.customer.address}}</td>
+                <td>
+                    <a href="{{url_for('auth.accept_request', request_id=request.id)}}" class="btn btn-success">Accept</a>
+                    <a href="{{url_for('auth.reject_request', request_id=request.id)}}" class="btn btn-danger">Reject</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2 class="mt-5">Closed Services</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Contact Phone</th>
+                <th>Location</th>
+                <th>Date Closed</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for closed in closed_requests %}
+            <tr>
+                <td>{{closed.id}}</td>
+                <td>{{closed.customer.name}}</td>
+                <td>{{closed.customer.phone_number}}</td>
+                <td>{{closed.customer.address}}</td>
+                <td>{{closed.date_created.strftime('%Y-%m-%d')}}</td>
+                <td>
+                    {% if closed.rating %}
+                        {{closed.rating}}/5
+                    {% else %}
+                        Not Rated
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{%endblock%}

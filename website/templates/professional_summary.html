@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-3">Professional Summary</h1>
+
+    <div class="row mt-4">
+        <!-- Service Requests Summary -->
+        <div class="col-md-6 " >
+            <h3>Service Requests Summary</h3>
+            <img src="{{ url_for('auth.service_requests_graph') }}" alt="Service Requests Summary" class="img-fluid">
+        </div>
+
+        <!-- Ratings Distribution -->
+        <div class="col-md-6 " >
+            <h3>Ratings Distribution</h3>
+            <img src="{{ url_for('auth.ratings_distribution_graph') }}" alt="Ratings Distribution" class="img-fluid">
+        </div>
+    </div>
+{%endblock%}
+
+
+
+

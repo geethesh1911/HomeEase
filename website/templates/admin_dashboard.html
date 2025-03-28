@@ -1,0 +1,240 @@
+{%extends 'base.html'%} 
+{% include 'flash_msg.html' with context %} 
+{% block body %}
+<div class="container mt-4">
+  <h4>Services</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Service Domain</th>
+        <th>Service Name</th>
+        <th>Base Price</th>
+        <th>Action</th>
+        <tbody>
+          {%for service in services%}
+          <tr>
+            <td>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#serviceModal{{service.id}}">
+                {{service.id}}
+              </a>
+            </td>
+            <td>{{service.domain}}</td>
+            <td>{{service.name}}</td>
+            <td>{{service.price}}</td>
+            <td>
+              <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#editServiceModal{{service.id}}"
+              >
+                Edit
+              </button>
+              <form action="{{ url_for('auth.delete_service', service_id=service.id) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this service?')">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <div class="modal fade" id="editServiceModal{{service.id}}" tabindex="-1" aria-labelledby="editServiceModalLabel{{service.id}}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editServiceModalLabel{{service.id}}">Edit Service</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{ url_for('auth.edit_service', service_id=service.id) }}" method="POST">
+                    <label for="domain" class="form-label mt-3">Service Domain</label>
+                    <input type="text" name="domain" id="domain" value="{{ service.domain }}" class="form-control">
+    
+                    <label for="name" class="form-label mt-3">Service Name</label>
+                    <input type="text" name="name" id="name" value="{{ service.name }}" class="form-control">
+    
+                    <label for="description" class="form-label mt-3">Description</label>
+                    <input type="text" name="description" id="description" value="{{ service.description }}" class="form-control">
+    
+                    <label for="price" class="form-label mt-3">Price</label>
+                    <input type="number" name="price" id="price" value="{{ service.price }}" class="form-control">
+    
+                    <div class="text-center">
+                      <button class="btn btn-primary mt-4" type="submit">Update</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </tr>
+    </thead>
+  </table>
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#addservice"
+  >
+    Add Service
+  </button>
+
+  <!--Table for Professional Status-->
+
+  <h4 class="mt-4">Professionals</h4>
+  <table class="table">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Experience</th><th>Service</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        {% for professional in professionals %}
+        <tr>
+            <td>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#professionalModal{{professional.id}}">
+                {{professional.id}}
+              </a>
+            </td>
+            <td>{{professional.name}}</td>
+            <td>{{professional.experience}} yrs</td>
+            <td>{{professional.service}}</td>
+            <td>
+              <td>
+                {% if professional.status == 'pending' %}
+                  <a href="{{url_for('auth.approve_professional', professional_id=professional.id)}}" class="btn btn-success btn-sm">Approve</a>
+                  <a href="{{url_for('auth.reject_professional', professional_id=professional.id)}}" class="btn btn-danger btn-sm">Reject</a>
+                {% elif professional.status == 'approved' %}
+                  <span class="text-success text-center">Approved</span>
+                {% elif professional.status == 'rejected' %}
+                  <span class="text-danger">Rejected</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+  <!--Model for Service details-->
+  
+  {% for service in services %}
+  <div
+  class="modal fade"
+  id="serviceModal{{service.id}}"
+  tabindex="-1"
+  aria-labelledby="serviceModalLabel{{service.id}}"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="serviceModalLabel{{service.id}}">Service Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ID:</strong> {{ service.id }}</p>
+        <p><strong>Domain:</strong> {{ service.domain }}</p>
+        <p><strong>Name:</strong> {{ service.name }}</p>
+        <p><strong>Description:</strong> {{ service.description }}</p>
+        <p><strong>Base Price:</strong> Rs.{{ service.price }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+  {% endfor %}
+
+  <!--Model to add service-->
+
+  <div
+    class="modal fade"
+    id="addservice"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add a Service</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="container col-12 col-md-6 center bg-white">
+            <form action="/admin" method="POST">
+              <label for="domain" class="form-label mt-1">Service Domain</label>
+              <input
+                type="text"
+                name="domain"
+                id="domain"
+                placeholder=""
+                class="form-control"
+              />
+              <label for="name" class="form-label mt-3">Service Name</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder=""
+                class="form-control"
+              />
+              <label for="description" class="form-label mt-3"
+                >Description</label
+              >
+              <input
+                type="text"
+                name="description"
+                id="description"
+                placeholder=""
+                class="form-control"
+              />
+              <label for="price" class="form-label mt-3">Price</label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                placeholder=""
+                class="form-control"
+              />
+              <div class="text-center">
+                <button class="btn btn-primary mt-4" type="submit">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Modal for Professinal details-->
+  {%for professional in professionals%}
+  <div class="modal fade" id="professionalModal{{professional.id}}" tabindex="-1" aria-labelledby="professionalModalLabel{{professional.id}}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="professionalModalLabel{{professional.id}}">Professional Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>ID:</strong> {{ professional.id }}</p>
+          <p><strong>Name:</strong> {{ professional.name }}</p>
+          <p><strong>Experience:</strong> {{ professional.experience }} years</p>
+          <p><strong>Service Domain:</strong> {{ professional.service }}</p>
+          <p><strong>Status:</strong> {{ professional.status }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+{%endblock%}

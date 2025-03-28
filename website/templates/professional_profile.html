@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container my-4">
+    <h1 class="text-center">Profile</h1>
+
+    <div class="card shadow-lg mt-4">
+        <div class="card-body">
+            <h3 class="card-title">{{professional.name}}</h3>
+            <h5 class="card-subtitle mb-3 text-muted">{{professional.service}}</h5>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Email:</strong> {{professional.email}}</li>
+                <li class="list-group-item"><strong>Phone:</strong> {{professional.phone_number}}</li>
+                <li class="list-group-item"><strong>Address:</strong> {{professional.address}} ({{professional.pincode}})</li>
+                <li class="list-group-item"><strong>Experience:</strong> {{professional.experience}} years</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h3>Work Overview:</h3>
+        <div class="card shadow-lg">
+            <div class="card-body text-center">
+                {% if completed_requests > 0 %}
+                    <p><strong>Service Requests Completed:</strong> {{ completed_requests }}</p>
+                    <p><strong>Rating:</strong> {{ "%.2f" % average_rating }}</p>
+                {% else %}
+                    <p class="text-warning">No completed service requests yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

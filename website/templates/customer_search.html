@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container my-4">
+    <h1 class="mb-4">Search Services</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="{{ url_for('auth.search_services') }}" class="mb-4">
+        <div class="row align-items-end">
+            <!-- Search By Dropdown -->
+            <div class="col-md-4">
+                <label for="search_by" class="form-label">Search By</label>
+                <select class="form-select" id="search_by" name="search_by" required>
+                    <option value="domain">Service Domain</option>
+                    <option value="name">Service Name</option>
+                    <option value="rating">Rating</option>
+                    <option value="price">Base Price</option>
+                </select>
+            </div>
+            <!-- Search Value Input -->
+            <div class="col-md-4">
+                <label for="search_value" class="form-label">Search Value</label>
+                <input type="text" class="form-control" id="search_value" name="search_value" placeholder="e.g., Salon, Haircut, 4, 100" required>
+            </div>
+            <!-- Submit Button -->
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-primary mt-3">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Display Search Results -->
+    {% if services %}
+        <h3 class="mt-4">Search Results</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Service Name</th>
+                        <th>Service Domain</th>
+                        <th>Rating</th>
+                        <th>Base Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <tr>
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.domain }}</td>
+                            <td>{{ service.average_rating if service.average_rating else 'No Rating' }}</td>
+                            <td>{{ service.price }}</td>
+                            <td>
+                                <a href="{{ url_for('auth.book_service', service_id=service.id) }}" class="btn btn-success">Book</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            No services found matching your criteria.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+    <h3>Best {{category}} packages.</h3>
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p>{{ service.description }}</p>
+                    <p><strong>Price: Rs.{{ service.price }}</strong></p>
+                    <a
+                        class="btn btn-primary"
+                        href="{{url_for('auth.book_service', service_id=service.id)}}"
+                        onclick="return confirm('Are you sure you want to book {{service.name}}?')"
+                    >
+                        Book
+                    </a>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+{%endblock%}

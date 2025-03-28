@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% include 'flash_msg.html' with context %}
+{% block body %}
+<div class="container mt-4">
+    <p>Hello,{{current_customer.name}}</p>
+    <h4>Looking for?</h4>
+    <div class="d-flex overflow-auto" >
+        {%for category in categories%}
+        <div class="card me-2 mb-3" style="width: 18rem;">
+            <div class="card-body">
+                <h4>{{category}}</h4>
+                <a href="{{url_for('auth.packages',category=category)}}" class="btn btn-primary">Explore Now!</a>
+            </div>
+        </div>
+        {%endfor%}      
+    </div>
+    
+
+    <h4 class="mt-4">Service History</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Service Name</th>
+                <th>Professional Name</th>
+                <th>Phone Number</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in service_requests %}
+            <tr>
+                <td>{{request.id}}</td>
+                <td>{{request.service.name}}</td>
+                {%if request.professional.name==NULL%}
+                    <td><p>Not assigned yet.</p></td>
+                    <td><p>-</p></td>
+                {%else%}
+                <td>{{request.professional.name}}</td>
+                <td>{{request.professional.phone_number[:2]}}XXXXXX</td>
+                {%endif%}
+                {%if request.status=='accepted'%}
+                <td>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#closeServiceModal{{ request.id }}">
+                        Close it?
+                    </button>
+                    <div class="modal fade" id="closeServiceModal{{ request.id }}" tabindex="-1" aria-labelledby="closeServiceLabel{{ request.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="closeServiceLabel{{ request.id }}">Service Remarks</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{url_for('auth.close_request', request_id=request.id)}}" method="POST">
+                                    <div class="modal-body">
+                                        <div class="row mb-3">
+                                            <div class="col-4"><strong>Service Name:</strong> {{ request.service.name }}</div>
+                                            <div class="col-4"><strong>Description:</strong> {{ request.service.description }}</div>
+                                            <div class="col-4"><strong>Date Created:</strong> {{ request.date_created.strftime('%Y-%m-%d') }}</div>
+                                        </div>
+        
+                                        <div class="row mb-3">
+                                            <div class="col-4"><strong>Professional ID:</strong> {{ request.professional.id }}</div>
+                                            <div class="col-4"><strong>Professional Name:</strong> {{ request.professional.name }}</div>
+                                            <div class="col-4"><strong>Contact No.:</strong> {{ request.professional.phone_number }}</div>
+                                        </div>
+        
+                                        <div class="mb-3">
+                                            <label for="rating{{request.id}}" class="form-label">Service Rating (out of 5):</label>
+                                            <input type="number" name="rating" id="rating{{request.id}}" class="form-control" min="1" max="5" required>
+                                        </div>
+        
+                                        <div class="mb-3">
+                                            <label for="remarks{{request.id}}" class="form-label">Remarks (if any):</label>
+                                            <textarea name="remarks" id="remarks{{request.id}}" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Submit and Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                {%else%}
+                    <td>{{request.status}}</td>
+                {%endif%}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
